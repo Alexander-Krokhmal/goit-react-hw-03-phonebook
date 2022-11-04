@@ -4,6 +4,8 @@ import ContactForm from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
 import Filter from './Filter/Filter';
 
+const LS_KEY = 'contact-details';
+
 class App extends Component {
   state = {
     contacts: [
@@ -43,6 +45,21 @@ class App extends Component {
     const visibleContact = this.state.contacts.filter(contact => contact.name.toLowerCase().includes(normalizedFilter));
 
     return visibleContact;
+  }
+
+  
+  componentDidMount() { 
+    const savedData = localStorage.getItem(LS_KEY);
+    if (savedData) {
+      this.setState({ contacts: JSON.parse(savedData) });
+    }
+  }
+  
+  componentDidUpdate(prevProps, prevState) {
+    const { contacts } = this.state;
+    if (prevState.contacts !== contacts) {
+      localStorage.setItem(LS_KEY, JSON.stringify(contacts));
+    }
   }
 
   render() {
